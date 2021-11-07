@@ -1,0 +1,15 @@
+openssl@1.1
+pcre2
+nginx
+python@3.9
+node
+curl
+wget
+nmap
+php
+composer
+sqlite
+freetds
+unixodbc
+mssql-tools
+msodbcsql17

@@ -7,7 +7,7 @@ class CheckerExtensions
     protected $modules_required = [];
     protected $modules_available = [];
 
-    public function __construct($path = "modules.txt")
+    public function __construct($path = "requirements/phpmodules.txt")
     {
         $def = file_get_contents($path);
         $modules = explode("\n", $def);
@@ -44,7 +44,7 @@ class CheckerExtensions
             return false;
         }
 
-        echo "\nSuccess: All required PHP modules are installed!\n\n";
+        echo "Success: All required PHP modules are installed!\n";
         return true;
     }
 

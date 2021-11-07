@@ -20,4 +20,4 @@ fi
 #Check if Database exists
 #Create Database if needed
 
-php checkdb.php
+php src/checkdb.php

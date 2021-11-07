@@ -48,6 +48,7 @@ class CheckerExtensions
         return true;
     }
 
+
     public function getHTMLReport()
     {
         //

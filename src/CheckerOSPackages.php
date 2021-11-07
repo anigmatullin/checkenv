@@ -32,7 +32,23 @@ class CheckerOSPackages
         }
     }
 
-    public function check()
+    public function detectOS()
+    {
+        if (PHP_OS == "Darwin") {
+            return "macos";
+        }
+        elseif (PHP_OS == "Linux") {
+
+            if (is_readable("/etc/os-release")) {
+                //might be Ubuntu...
+                $c = file_get_contents("/etc/os-release");
+                echo $c;
+            }
+        }
+
+    }
+
+    public function getMacosPackages()
     {
         $process = new Process($this->cmd_macos);
         $process->run();
@@ -43,7 +59,20 @@ class CheckerOSPackages
         }
 
         $out = $process->getOutput();
-        $this->pkg_available = explode("\n", $out);
+        return explode("\n", $out);
+    }
+
+    public function check()
+    {
+        $os = $this->detectOS();
+        echo $os, "\n";
+
+        if ($os == "macos") {
+            $this->pkg_available = $this->getMacosPackages();
+        }
+        else {
+            return;
+        }
 
         $unavailable = array_diff($this->pkg_required, $this->pkg_available);
         $count = count($unavailable);

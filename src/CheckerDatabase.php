@@ -21,9 +21,10 @@ class CheckerDatabase
             $arr_sizes = [];
         }
         catch (Exception $e) {
+            echo "Database test failed:\n";
             echo $e->getMessage();
             echo "\n\n";
-            exit(1);
+            return false;
         }
 
         $tbl = new Console_Table();

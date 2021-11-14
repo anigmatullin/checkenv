@@ -23,12 +23,13 @@ $dbsettings = [
     'prefix'    => '',
 
     'options'   => [
-        PDO::ATTR_STRINGIFY_FETCHES => false,
-        PDO::ATTR_EMULATE_PREPARES => false,
-        PDO::ATTR_TIMEOUT => 5,
+//        PDO::ATTR_STRINGIFY_FETCHES => false,
+//        PDO::ATTR_EMULATE_PREPARES => false,
+//        PDO::ATTR_TIMEOUT => 5,  //Not supported in SQLSRV
+        PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 5,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]
 ];
-
 
 $db = new DB;
 

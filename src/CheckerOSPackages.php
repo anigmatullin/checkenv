@@ -5,13 +5,23 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CheckerOSPackages
 {
+    protected $os;
     protected $pkg_required = [];
     protected $pkg_available = [];
 
     //brew list -1 --formula
     protected $cmd_macos = ["brew", "list", "-1", "--formula"];
+    protected $cmd_ubuntu = ["apt", "list", "--installed"];
 
-    public function __construct($path = "requirements/packages/macos.txt")
+    public function __construct()
+    {
+        $this->os =  strtolower( $this->detectOS() );
+        $path = "requirements/packages/$this->os.txt";
+        $this->loadRequirements($path);
+
+    }
+
+    public function loadRequirements($path)
     {
         $reqs = file_get_contents($path);
         $items = explode("\n", $reqs);
@@ -35,15 +45,27 @@ class CheckerOSPackages
     public function detectOS()
     {
         if (PHP_OS == "Darwin") {
-            return "macos";
+            return "Macos";
         }
         elseif (PHP_OS == "Linux") {
 
             if (is_readable("/etc/os-release")) {
                 //might be Ubuntu...
+                $vals = [];
                 $c = file_get_contents("/etc/os-release");
-                echo $c;
+                $c = explode("\n", $c);
+                foreach ($c as $line) {
+                    if (strlen($line)) {
+                        list($key, $val) = explode("=", $line);
+                        $vals[$key] = trim($val, "\ \t\n\r\0\x0B\"");
+                    }
+                }
+                return $vals['NAME'];
             }
+            else {
+                return "Linux";
+            }
+
         }
 
     }
@@ -62,16 +84,45 @@ class CheckerOSPackages
         return explode("\n", $out);
     }
 
+    public function getUbuntuPackages()
+    {
+        $process = new Process($this->cmd_ubuntu);
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        $out = $process->getOutput();
+        $arr = explode("\n", $out);
+        $res = [];
+
+        foreach($arr as $line) {
+            $tmp = explode("/", $line);
+            $item = $tmp[0];
+
+            if (strlen($item)) {
+                $res[] = $item;
+            }
+        }
+
+        return $res;
+    }
+
     public function check()
     {
         $os = $this->detectOS();
-        echo $os, "\n";
+        echo "Success: Detected OS: $os";
 
-        if ($os == "macos") {
+        if ($os == "Macos") {
             $this->pkg_available = $this->getMacosPackages();
         }
+        elseif ($os == "Ubuntu") {
+            $this->pkg_available = $this->getUbuntuPackages();
+        }
         else {
-            return;
+            return false;
         }
 
         $unavailable = array_diff($this->pkg_required, $this->pkg_available);

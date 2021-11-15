@@ -113,7 +113,7 @@ class CheckerOSPackages
     public function check()
     {
         $os = $this->detectOS();
-        echo "Success: Detected OS: $os";
+        echo "Success: Detected OS: $os\n";
 
         if ($os == "Macos") {
             $this->pkg_available = $this->getMacosPackages();

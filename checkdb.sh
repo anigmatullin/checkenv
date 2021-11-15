@@ -16,6 +16,8 @@ else
     exit 1
 fi
 
+echo
+
 #Check connection to Master Database
 #Check if Database exists
 #Create Database if needed

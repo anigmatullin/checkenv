@@ -38,6 +38,47 @@ class CheckerDocker
         return $success;
     }
 
+    public function checkContainers($required)
+    {
+        $containers = [];
+        $process = new Process($this->cmd);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return false;
+        }
+
+        $out = $process->getOutput();
+        $out = explode("\n", $out);
+        array_shift($out);
+        array_pop($out);
+
+        foreach ($out as $line) {
+            $items = preg_split("/\s/", $line);
+            $name = array_pop($items);
+            $containers[] = $name;
+        }
+
+        $unavailable = array_diff($required, $containers);
+        $count = count($unavailable);
+
+        if ($count) {
+            echo "Fail: Some containers are unavailable:\n";
+            echo "The list of absent containers:\n";
+
+            foreach ($unavailable as $absent) {
+                echo "\t - ", $absent, "\n";
+            }
+
+            echo "\n";
+            return false;
+        }
+        else {
+            echo "Success: all container are available\n";
+            return true;
+        }
+    }
+
     public function cmdAvailable($cmd)
     {
         $process = new Process($cmd);

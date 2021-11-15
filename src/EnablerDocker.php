@@ -34,8 +34,14 @@ class EnablerDocker
     public function enable()
     {
         $process = new Process($this->cmd, null, $this->env);
-        $process->run();
-        $res =  $process->isSuccessful();
+
+        try {
+            $process->run();
+            $res = $process->isSuccessful();
+        }
+        catch (Exception $e) {
+            $res = false;
+        }
 
         if ($res) {
             echo "Container enabled successfully\n";
@@ -44,7 +50,6 @@ class EnablerDocker
         }
         else {
             echo "Fail: unable to start container\n\n";
-            throw new ProcessFailedException($process);
         }
 
         return $res;

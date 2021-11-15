@@ -15,11 +15,10 @@ class CheckerDocker
 
     public function check()
     {
-        $success = false;
+        $success = true;
 
         if ($this->cmdAvailable($this->cmd)) {
             echo "Success: Docker is available\n";
-            $success = true;
         }
         else {
             echo "Fail: Cannot run docker\n";
@@ -28,7 +27,6 @@ class CheckerDocker
 
         if ($this->cmdAvailable($this->cmd_compose)) {
             echo "Success: Docker Compose is available\n";
-            $success = true;
         }
         else {
             echo "Fail: Cannot run docker-compose\n";

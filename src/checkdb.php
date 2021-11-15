@@ -8,6 +8,7 @@ require 'CheckerExtensions.php';
 require 'CheckerOSPackages.php';
 require 'CheckerDocker.php';
 require 'CheckerDNS.php';
+require 'CheckerTcpPort.php';
 
 require 'EnablerDocker.php';
 
@@ -25,6 +26,9 @@ $pkg_checker->check();
 
 $dns_checker = new CheckerDNS();
 $dns_checker->check();
+
+$tcp_checker = new CheckerTcpPort();
+$tcp_checker->check();
 
 $docker_checker = new CheckerDocker();
 $docker = $docker_checker->check();

@@ -2,19 +2,52 @@
 
 class CheckerTcpPort
 {
+    protected $required = [
+    ];
+
     public function __construct()
     {
-        //
+        $this->loadRequirements();
     }
 
-    public function loadRequirements()
+    public function loadRequirements($path = "requirements/tcpports.txt")
     {
-        //
+        $content = file_get_contents($path);
+        $content = explode("\n", $content);
+
+        foreach ($content as $line) {
+            $line = trim($line);
+            $row = preg_split("/[\s:]/", $line);
+
+            if (count($row) != 2) {
+                continue;
+            }
+
+            $host = $row[0];
+            $port = $row[1];
+
+            $this->required[] = [$host, $port];
+        }
     }
 
     public function check()
     {
-        //
+        $result = true;
+
+        foreach ($this->required as $row) {
+            list($host, $port) = $row;
+            $res = $this->checkport($host, $port);
+
+            if ($res) {
+                echo "Success tcp connection: $host $port\n";
+            }
+            else {
+                echo "Failed tcp connection: $host $port\n";
+                $result = false;
+            }
+        }
+
+        return $result;
     }
 
     public function checkport($host, $port, $timeout=10)

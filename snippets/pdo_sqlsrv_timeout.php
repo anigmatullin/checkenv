@@ -4,7 +4,7 @@ $server = "192.168.35.129";
 $db = "master";
 $timeout = 1;
 $user = "sa";
-$pass = "Moscow@2017";
+$pass = "P@ssw0rd";
 
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION

@@ -1,0 +1,6 @@
+report types:
+  - cli
+  - email
+  - webhook -> json
+  - database
+

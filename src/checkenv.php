@@ -9,6 +9,7 @@ require 'CheckerOSPackages.php';
 require 'CheckerDocker.php';
 require 'CheckerDNS.php';
 require 'CheckerTcpPort.php';
+require 'CheckerPHPVersion.php';
 
 require 'EnablerDocker.php';
 require 'ReportEmail.php';
@@ -17,8 +18,9 @@ require 'sql.php';
 
 $msg = [];
 
-//$db_checker = new CheckerDatabase();
-//$db_checker->check();
+$db_checker = new CheckerDatabase();
+$db_checker->check();
+$msg['DB_CONNECTION'] = $db_checker->getHTMLReport();
 
 $ext_checker = new CheckerExtensions();
 $ext_checker->check();
@@ -36,6 +38,10 @@ $tcp_checker = new CheckerTcpPort();
 $tcp_checker->check();
 $msg['TCP_PORTS'] = $tcp_checker->getHTMLReport();
 
+$php_checker = new CheckerPHPVersion();
+$php_checker->check();
+$msg['PHP_VERSION'] = $php_checker->getHTMLReport();
+
 $docker_checker = new CheckerDocker();
 $docker = $docker_checker->check();
 
@@ -51,6 +57,10 @@ if ($docker && !$container_exists) {
 
 $msg['DOCKER_INSTALLED'] = $docker_checker->getHTMLReport();
 
+ob_start();
+phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES);
+$pinfo = ob_get_contents();
+ob_end_clean();
 
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader, [
@@ -58,7 +68,8 @@ $twig = new \Twig\Environment($loader, [
 ]);
 
 $template = $twig->load('results.html');
-$html =  $template->render(['msg' => $msg]);
+
+$html =  $template->render(['msg' => $msg, 'phpinfo' => $pinfo]);
 
 $reporter = new ReportEmail();
 $reporter->send("EnvCheck Report", $html);

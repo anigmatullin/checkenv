@@ -22,9 +22,9 @@ class CheckerDatabase
             $arr_sizes = [];
         }
         catch (Exception $e) {
-            echo "Database test failed:\n";
-            echo $e->getMessage();
-            echo "\n\n";
+            $this->msg .= "Database test failed:\n";
+            $this->msg .= $e->getMessage();
+            $this->msg .= "\n\n";
             return false;
         }
 
@@ -75,12 +75,12 @@ class CheckerDatabase
 # Create Database, if it does not exist
         $exists = isset($dbs[$dbname]);
         if (!$exists) {
-            echo "The Database $dbname does not exist!\n";
+            $this->msg .=  "The Database $dbname does not exist!\n";
             $creator = new DatabaseCreator();
             $creator->create($dbname);
         }
         else {
-            echo "Success: The Database $dbname exists!\n";
+            $this->msg .=  "Success: The Database $dbname exists!\n";
         }
 
     }

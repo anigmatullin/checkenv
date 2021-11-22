@@ -24,6 +24,10 @@
         <td>{{ msg.DB_CONNECTION | raw }}</td>
     </tr>
     <tr>
+        <td>PHP Version</td>
+        <td>{{ msg.PHP_VERSION | raw }}</td>
+    </tr>
+    <tr>
         <td>PHP Modules</td>
         <td>{{ msg.PHP_EXTENSIONS | raw }}</td>
     </tr>
@@ -45,6 +49,10 @@
     </tr>
 
 </table>
+
+<pre>
+    {{ phpinfo | raw }}
+</pre>
 
 </body>
 </html>

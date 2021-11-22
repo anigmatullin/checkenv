@@ -22,4 +22,4 @@ echo
 #Check if Database exists
 #Create Database if needed
 
-php src/checkdb.php
+php src/checkenv.php

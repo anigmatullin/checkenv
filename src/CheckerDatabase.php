@@ -4,6 +4,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class CheckerDatabase
 {
+    protected $msg;
 
     public function __construct()
     {
@@ -82,5 +83,10 @@ class CheckerDatabase
             echo "Success: The Database $dbname exists!\n";
         }
 
+    }
+
+    public function getHTMLReport()
+    {
+        return nl2br($this->msg);
     }
 }

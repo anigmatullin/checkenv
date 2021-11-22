@@ -5,6 +5,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CheckerOSPackages
 {
+    protected $msg;
     protected $os;
     protected $pkg_required = [];
     protected $pkg_available = [];
@@ -113,7 +114,7 @@ class CheckerOSPackages
     public function check()
     {
         $os = $this->detectOS();
-        echo "Success: Detected OS: $os\n";
+        $this->msg .=  "Success: Detected OS: $os\n";
 
         if ($os == "Macos") {
             $this->pkg_available = $this->getMacosPackages();
@@ -129,21 +130,21 @@ class CheckerOSPackages
         $count = count($unavailable);
 
         if ($count) {
-            echo "\nCount of absent packages: $count\n";
-            echo "The list of absent packages:\n";
+            $this->msg .=  "\nCount of absent packages: $count\n";
+            $this->msg .=  "The list of absent packages:\n";
             foreach ($unavailable as $absent) {
-                echo "\t - ", $absent, "\n";
+                $this->msg .=  "\t - " . $absent . "\n";
             }
-            echo "\n";
+            $this->msg .=  "\n";
             return false;
         }
 
-        echo "Success: All required OS packages are installed!\n";
+        $this->msg .=  "Success: All required OS packages are installed!\n";
         return true;
     }
 
     public function getHTMLReport()
     {
-        //
+        return nl2br($this->msg);
     }
 }

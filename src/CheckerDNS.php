@@ -2,6 +2,8 @@
 
 class CheckerDNS
 {
+    protected $msg;
+
     protected $required = [];
 
     protected $dnstypes = [
@@ -64,15 +66,19 @@ class CheckerDNS
             $res = dns_get_record($resource, $dnstype);
 
             if (!$res) {
-                echo "Fail: DNS request failed: $resource $typedescr\n";
+                $this->msg .=  "Fail: DNS request failed: $resource $typedescr\n";
                 $success = false;
             }
             else {
-                echo "Success: DNS query for: $resource $typedescr\n";
+                $this->msg .=  "Success: DNS query for: $resource $typedescr\n";
             }
-
         }
 
         return $success;
+    }
+
+    public function getHTMLReport()
+    {
+        return nl2br($this->msg);
     }
 }

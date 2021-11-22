@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CheckEnv Results</title>
+
+    <style>
+        table, th, td {
+            border: 1px solid darkblue;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+
+    <tr>
+        <td>Database Connection</td>
+        <td>{{ msg.DB_CONNECTION | raw }}</td>
+    </tr>
+    <tr>
+        <td>PHP Modules</td>
+        <td>{{ msg.PHP_EXTENSIONS | raw }}</td>
+    </tr>
+    <tr>
+        <td>OS Packages</td>
+        <td>{{ msg.OS_PACKAGES | raw }}</td>
+    </tr>
+    <tr>
+        <td>DNS</td>
+        <td>{{ msg.DNS_RECORDS | raw }}</td>
+    </tr>
+    <tr>
+        <td>TCP Ports</td>
+        <td>{{ msg.TCP_PORTS | raw }}</td>
+    </tr>
+    <tr>
+        <td>Docker</td>
+        <td>{{ msg.DOCKER_INSTALLED | raw }}</td>
+    </tr>
+
+</table>
+
+</body>
+</html>

@@ -4,6 +4,7 @@
 
 class CheckerExtensions
 {
+    protected $msg;
     protected $modules_required = [];
     protected $modules_available = [];
 
@@ -28,6 +29,11 @@ class CheckerExtensions
         }
     }
 
+    public function getMessage()
+    {
+        return $this->msg;
+    }
+
     public function check()
     {
         $this->modules_available = get_loaded_extensions();
@@ -35,22 +41,22 @@ class CheckerExtensions
         $count = count($unavailable);
 
         if ($count) {
-            echo "\nCount of absent modules: $count\n";
-            echo "The list of absent modules:\n";
+            $this->msg = "\nCount of absent modules: $count\n";
+            $this->msg .= "The list of absent modules:\n";
             foreach ($unavailable as $absent) {
-                echo "\t - ", $absent, "\n";
+                $this->msg .= "\t - " . $absent . "\n";
             }
-            echo "\n";
+            $this->msg .= "\n";
             return false;
         }
 
-        echo "Success: All required PHP modules are installed!\n";
+        $this->msg .= "Success: All required PHP modules are installed!\n";
         return true;
     }
 
 
     public function getHTMLReport()
     {
-        //
+        return nl2br($this->msg);
     }
 }

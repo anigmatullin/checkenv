@@ -2,6 +2,7 @@
 
 class CheckerTcpPort
 {
+    protected $msg;
     protected $required = [
     ];
 
@@ -39,10 +40,10 @@ class CheckerTcpPort
             $res = $this->checkport($host, $port);
 
             if ($res) {
-                echo "Success tcp connection: $host $port\n";
+                $this->msg .= "Success tcp connection: $host $port\n";
             }
             else {
-                echo "Failed tcp connection: $host $port\n";
+                $this->msg .= "Failed tcp connection: $host $port\n";
                 $result = false;
             }
         }
@@ -61,5 +62,10 @@ class CheckerTcpPort
             fclose($op); //explicitly close open socket connection
             return true; //DC is up & running, we can safely connect with ldap_connect
         }
+    }
+
+    public function getHTMLReport()
+    {
+        return nl2br($this->msg);
     }
 }

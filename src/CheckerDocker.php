@@ -5,6 +5,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CheckerDocker
 {
+    protected $msg;
+
     protected $cmd = ["docker", "ps"];
     protected $cmd_compose = ["docker-compose", "help"];
 
@@ -18,18 +20,18 @@ class CheckerDocker
         $success = true;
 
         if ($this->cmdAvailable($this->cmd)) {
-            echo "Success: Docker is available\n";
+            $this->msg .=  "Success: Docker is available\n";
         }
         else {
-            echo "Fail: Cannot run docker\n";
+            $this->msg .= "Fail: Cannot run docker\n";
             $success = false;
         }
 
         if ($this->cmdAvailable($this->cmd_compose)) {
-            echo "Success: Docker Compose is available\n";
+            $this->msg .=  "Success: Docker Compose is available\n";
         }
         else {
-            echo "Fail: Cannot run docker-compose\n";
+            $this->msg .=  "Fail: Cannot run docker-compose\n";
             $success = false;
         }
 
@@ -61,18 +63,18 @@ class CheckerDocker
         $count = count($unavailable);
 
         if ($count) {
-            echo "Fail: Some containers are unavailable:\n";
-            echo "The list of absent containers:\n";
+            $this->msg .=  "Fail: Some containers are unavailable:\n";
+            $this->msg .= "The list of absent containers:\n";
 
             foreach ($unavailable as $absent) {
                 echo "\t - ", $absent, "\n";
             }
 
-            echo "\n";
+            $this->msg .= "\n";
             return false;
         }
         else {
-            echo "Success: all container are available\n";
+            $this->msg .=  "Success: all container are available\n";
             return true;
         }
     }
@@ -82,5 +84,10 @@ class CheckerDocker
         $process = new Process($cmd);
         $process->run();
         return $process->isSuccessful();
+    }
+
+    public function getHTMLReport()
+    {
+        return nl2br($this->msg);
     }
 }
